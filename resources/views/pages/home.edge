@@ -72,7 +72,12 @@
     <nav class="bg-gray-800 p-4">
       <div class="container flex gap-4 justify-center">
         <a href="{{ route('home') }}" class="text-lime-400 text-lg font-semibold">Home</a>
-        <a href="{{ route('movies.show') }}" class="text-lime-300 text-lg font-semibold">Movies</a>
+        {{-- <a href="{{ route('movies.show') }}" class="text-lime-300 text-lg font-semibold">Movies</a> --}}
+        <a
+          href="{{ route('movies.show', {slug:'another-movie'}) }}"
+          class="text-lime-300 text-lg font-semibold"
+        >Marvel_Movie</a>
+        <a href="{{ route('movies.show', {slug:'my-awesome-movie'}) }}" class="text-lime-300 text-lg font-semibold">DC Movie</a>
       </div>
     </nav>
     <div class="mt-16 flex justify-center items-center gap-4 flex-col">

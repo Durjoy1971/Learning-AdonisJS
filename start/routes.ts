@@ -7,16 +7,27 @@
 |
 */
 
+import app from '@adonisjs/core/services/app'
 import router from '@adonisjs/core/services/router'
+import fs from 'node:fs/promises'
 
 router.on('/').render('pages/home').as('home')
 
-//! router
+//* Using Route Parameters -> :slug
 router
-  .get('/movies/ok', async (ctx) => {
-    return ctx.view.render('pages/movies', { movie: 'router-value 5' })
+  .get('/movies/:slug', async (ctx) => {
+    const url = app.makeURL(`resources/movies/${ctx.params.slug}.html`)
+    const movie = await fs.readFile(url, 'utf-8')
+    return ctx.view.render('pages/movies/show', { movie })
   })
   .as('movies.show')
+
+//? router with default way
+// router
+//   .get('/movies/ok', async (ctx) => {
+//     return ctx.view.render('pages/movies', { movie: 'router-value 5' })
+//   })
+//   .as('movies.show')
 
 //* More Example
 // router.get('/movies', () => {}).as('movies.index')
