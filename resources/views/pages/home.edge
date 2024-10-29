@@ -31,7 +31,7 @@
     </style>
 
     <script src="https://cdn.tailwindcss.com">
-      
+
     </script>
 
     <script>
@@ -71,13 +71,16 @@
   <body class="min-h-screen w-screen font-sans bg-black text-white">
     <nav class="bg-gray-800 p-4">
       <div class="container flex gap-4 justify-center">
-        <a href="{{ route('home') }}" class="text-lime-400 text-lg font-semibold">Home</a>
-        {{-- <a href="{{ route('movies.show') }}" class="text-lime-300 text-lg font-semibold">Movies</a> --}}
-        <a
-          href="{{ route('movies.show', {slug:'another-movie'}) }}"
-          class="text-lime-300 text-lg font-semibold"
-        >Marvel_Movie</a>
-        <a href="{{ route('movies.show', {slug:'my-awesome-movie'}) }}" class="text-lime-300 text-lg font-semibold">DC Movie</a>
+        <a href="{{ route('home') }}" class="text-lime-400 text-base font-semibold">Home</a>
+        <ul class="flex gap-4">
+          @each(movie in movies)
+            <li>
+              <a href="{{ route('movies.show', {slug: movie.slug}) }}" class="text-lime-500 text-lg font-semibold">
+                {{ movie.title }}
+            </a>
+            </li>
+          @end
+        </ul>
       </div>
     </nav>
     <div class="mt-16 flex justify-center items-center gap-4 flex-col">
@@ -87,6 +90,9 @@
       <p class="mt-4 text-xl font-semibold text-blue-500">
         Learning AdonisJS
       </p>
+      {{ inspect(movies) }}
+      
     </div>
+
   </body>
 </html>
