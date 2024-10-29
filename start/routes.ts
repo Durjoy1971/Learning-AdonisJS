@@ -7,33 +7,23 @@
 |
 */
 
-import { Exception } from '@adonisjs/core/exceptions'
-import app from '@adonisjs/core/services/app'
 import router from '@adonisjs/core/services/router'
-import fs from 'node:fs/promises'
-import { MarkdownFile } from '@dimerapp/markdown'
 import { toHtml } from '@dimerapp/markdown/utils'
+import MovieService from '#services/movie_service'
 
 router
   .get('/', async (ctx) => {
-    const url = app.makeURL('resources/movies')
-    const files = await fs.readdir(url)
-    console.log(files)
+    const slugs = await MovieService.getSlugs()
     const movies: Record<string, any>[] = []
 
-    for (const filename of files) {
-      const movieURL = app.makeURL(`resources/movies/${filename}`)
-      const file = await fs.readFile(movieURL, 'utf8')
-      const md = new MarkdownFile(file)
-      await md.process()
+    for (const slug of slugs) {
+      const md = await MovieService.read(slug)
 
       movies.push({
         title: md.frontmatter.Title,
-        slug: filename.replace('.md', ''),
+        slug,
       })
     }
-
-    console.log(movies)
 
     return ctx.view.render('pages/home', { movies })
   })
@@ -42,21 +32,9 @@ router
 //* Reading and Supporting Markdown
 router
   .get('/movies/:slug', async (ctx) => {
-    const url = app.makeURL(`resources/movies/${ctx.params.slug}.md`)
-
-    try {
-      const file = await fs.readFile(url, 'utf-8')
-      const md = new MarkdownFile(file)
-      await md.process()
-      const movie = toHtml(md).contents
-
-      ctx.view.share({ movie })
-    } catch (error) {
-      throw new Exception('Could not find a movie called ' + `${ctx.params.slug}`, {
-        code: 'E_NOT_FOUND',
-        status: 404,
-      })
-    }
+    const md = await MovieService.read(ctx.params.slug)
+    const movie = toHtml(md).contents
+    ctx.view.share({ movie, md })
     return ctx.view.render('pages/movies/show')
   })
   .as('movies.show')
