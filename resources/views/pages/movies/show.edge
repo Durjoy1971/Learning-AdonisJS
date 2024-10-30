@@ -76,11 +76,9 @@
     </nav>
     <div class="pt-8 flex flex-col">
       <div class="grow pb-4 flex justify-center items-center flex-col gap-4">
-        <div class="text-4xl font-bold text-orange-500">
-          Hello Durjoy
-        </div>
         <div class="flex flex-col gap-4 text-white w-[500px]">
-          {{{ movie }}}
+            <h1 class="text-3xl font-bold">{{ movie.title }}</h1>
+            <p class="text-lg mt-2">{{{ movie.abstract }}}</p>
           {{ inspect(movie) }}
         </div>
       </div>
