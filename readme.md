@@ -132,3 +132,46 @@ router
 ```
 
 By defining routes, you can ensure that incoming requests are handled by the correct controller actions, promoting a clean and organized codebase.
+
+### <span style="color:brown">Defining a Model</span>
+
+Models in AdonisJS represent the data structure of your application and provide an interface for interacting with the database. They are typically used to perform CRUD operations.
+
+```typescript
+import MovieService from '#services/movie_service'
+import { toHtml } from '@dimerapp/markdown/utils'
+
+export default class Movie {
+    declare title: string
+    declare slug: string
+    declare abstract: string
+
+    static async all() {
+        const slugs = await MovieService.getSlugs()
+        const movies: Movie[] = []
+
+        for (const slug of slugs) {
+            const movie = await this.find(slug)
+            movies.push(movie)
+        }
+
+        return movies
+    }
+
+    static async find(slug: string) {
+        const md = await MovieService.read(slug)
+        const movie = new Movie()
+
+        movie.abstract = toHtml(md).contents
+        movie.slug = slug
+        movie.title = md.frontmatter.Title
+
+        return movie
+    }
+}
+```
+
+/**
+ * The Movie class represents a movie with a title, slug, and abstract.
+ * It provides methods to fetch all movies or find a specific movie by its slug.
+ */
